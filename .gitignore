@@ -1,0 +1,95 @@
+# =========================
+
+# C++ Compiled Files
+
+# =========================
+
+*.o
+*.out
+*.exe
+*.app
+*.class
+*.dll
+*.so
+*.dylib
+
+# Executables
+
+kiosk
+a.out
+
+# =========================
+
+# Build Directories
+
+# =========================
+
+build/
+bin/
+obj/
+out/
+
+# CMake Files
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# =========================
+
+# Logs & Temp Files
+
+# =========================
+
+*.log
+*.tmp
+*.temp
+
+# =========================
+
+# OS Generated Files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# Editor / IDE Files
+
+# =========================
+
+# VS Code
+
+.vscode/
+
+# JetBrains (CLion, IntelliJ)
+
+.idea/
+*.iml
+
+# Visual Studio
+
+*.sln
+*.vcxproj*
+*.pdb
+
+# =========================
+
+# Debug Files
+
+# =========================
+
+*.dSYM/
+*.stackdump
+
+# =========================
+
+# Other
+
+# =========================
+
+*.swp
+*~
