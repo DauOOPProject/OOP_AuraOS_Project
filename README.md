@@ -155,10 +155,13 @@ Item dispensed successfully!
 
 * Developed as part of **IT620 – Object Oriented Programming Project**
 * Path A Implementated by team **PolymorphRangers**
-* Dhrumil Doshi 202512088
-* Harsh Rathod  202512086
-* Rohit Peswani 202512115
-* Parshwa Jain  202512096
+
+|Name         | StudentID|
+|- |- |
+|Dhrumil Doshi | 202512088 |
+|Harsh Rathod |202512086 |
+|Rohit Peswani | 202512115 |
+|Parshwa Jain | 202512096 |
 
 ---
 
