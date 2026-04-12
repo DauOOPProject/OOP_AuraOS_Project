@@ -1,6 +1,6 @@
 # Aura Retail OS – Path A
 
-## 📌 Project Overview
+## Project Overview
 
 This project is a partial implementation of **Aura Retail OS**, a smart kiosk system designed using Object-Oriented Programming principles and design patterns.
 
@@ -15,7 +15,7 @@ This implementation focuses on **Path A: Adaptive Autonomous System**, where the
 
 ---
 
-## 🚀 Features Implemented
+## Features Implemented
 
 ### 1. Interactive Kiosk System
 
@@ -46,9 +46,9 @@ This implementation focuses on **Path A: Adaptive Autonomous System**, where the
 
 ---
 
-## 🧠 Design Patterns Used
+## Design Patterns Used
 
-### 🔹 Strategy Pattern
+### Strategy Pattern
 
 * `PricingStrategy`
 * `StandardPricing`
@@ -58,7 +58,7 @@ Used to dynamically change pricing logic at runtime.
 
 ---
 
-### 🔹 State Pattern
+### State Pattern
 
 * `KioskState`
 * `ActiveState`
@@ -68,7 +68,7 @@ Controls kiosk behavior based on current state.
 
 ---
 
-### 🔹 Command Pattern
+### Command Pattern
 
 * `Command`
 * `PurchaseCommand`
@@ -77,7 +77,7 @@ Encapsulates purchase operation as an object.
 
 ---
 
-## 🏗️ Class Structure (Implemented)
+## Class Structure (Implemented)
 
 * Product
 * Inventory
@@ -89,7 +89,7 @@ Encapsulates purchase operation as an object.
 
 ---
 
-## ⚙️ How to Run the Program
+## How to Run the Program
 
 ### Step 1: Compile
 
@@ -105,7 +105,7 @@ g++ main.cpp -o kiosk
 
 ---
 
-## 🖥️ Sample Menu
+## Sample Menu
 
 ```
 ===== KIOSK MENU =====
@@ -120,7 +120,7 @@ g++ main.cpp -o kiosk
 
 ---
 
-## 📊 Sample Output
+## Sample Output
 
 ```
 Kiosk is in ACTIVE mode
@@ -132,7 +132,7 @@ Item dispensed successfully!
 
 ---
 
-## ⚠️ Limitations
+## Limitations
 
 * No database or file storage (in-memory only)
 * Payment system is simulated
@@ -141,7 +141,7 @@ Item dispensed successfully!
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 * Add Observer Pattern (Event System)
 * Add Failure Handling (Chain of Responsibility)
@@ -151,14 +151,18 @@ Item dispensed successfully!
 
 ---
 
-## 👨‍💻 Author / Team
+## Author / Team
 
 * Developed as part of **IT620 – Object Oriented Programming Project**
-* Path A Implementation
+* Path A Implementated by team **PolymorphRangers**
+* Dhrumil Doshi 202512088
+* Harsh Rathod  202512086
+* Rohit Peswani 202512115
+* Parshwa Jain  202512096
 
 ---
 
-## 📌 Notes
+## Notes
 
 This is a **prototype implementation** for Subtask 2.
 The final system will include more modules and advanced features.
