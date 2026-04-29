@@ -1,252 +1,225 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-/* ================= PRODUCT ================= */
-class Product {
-public:
-    string name;
-    double price;
-    int quantity;
+#include "command/PurchaseCommand.h"
+#include "core/Kiosk.h"
+#include "factory/KioskFactory.h"
+#include "failure/AlertHandler.h"
+#include "failure/RecalibrationHandler.h"
+#include "failure/RetryHandler.h"
+#include "inventory/FileManager.h"
+#include "inventory/TransactionManager.h"
+#include "models/Product.h"
+#include "models/UserManager.h"  // 🔥 NEW
+#include "observer/EventManager.h"
+#include "observer/MonitoringSystem.h"
+#include "pricing/EmergencyPricing.h"
+#include "pricing/StandardPricing.h"
+#include "registry/CentralRegistry.h"
+#include "registry/SystemConfig.h"
+#include "state/ActiveState.h"
+#include "state/EmergencyState.h"
+#include "state/MaintenanceState.h"
+#include "state/PowerSavingState.h"
 
-    Product(string n, double p, int q) {
-        name = n;
-        price = p;
-        quantity = q;
-    }
-};
-
-/* ================= INVENTORY ================= */
-class Inventory {
-private:
-    vector<Product> products;
-
-public:
-    void addProduct(Product p) {
-        products.push_back(p);
-    }
-
-    void showProducts() {
-        cout << "\nAvailable Products:\n";
-        for (auto &p : products) {
-            cout << p.name << " | Price: " << p.price 
-                 << " | Quantity: " << p.quantity << endl;
-        }
-    }
-
-    Product* getProduct(string name) {
-        for (auto &p : products) {
-            if (p.name == name) return &p;
-        }
-        return nullptr;
-    }
-};
-
-/* ================= STRATEGY PATTERN ================= */
-class PricingStrategy {
-public:
-    virtual double calculatePrice(Product *p) = 0;
-};
-
-class StandardPricing : public PricingStrategy {
-public:
-    double calculatePrice(Product *p) override {
-        cout << "Using STANDARD pricing\n";
-        return p->price;
-    }
-};
-
-class EmergencyPricing : public PricingStrategy {
-public:
-    double calculatePrice(Product *p) override {
-        cout << "Using EMERGENCY pricing (1.5x)\n";
-        return p->price * 1.5;
-    }
-};
-
-/* ================= STATE PATTERN ================= */
-class KioskState {
-public:
-    virtual bool allowPurchase() = 0;
-};
-
-class ActiveState : public KioskState {
-public:
-    bool allowPurchase() override {
-        cout << "Kiosk is in ACTIVE mode\n";
-        return true;
-    }
-};
-
-class EmergencyState : public KioskState {
-public:
-    bool allowPurchase() override {
-        cout << "Kiosk is in EMERGENCY mode (restricted)\n";
-        return false;
-    }
-};
-
-/* ================= PAYMENT ================= */
-class Payment {
-public:
-    bool processPayment(double amount) {
-        cout << "Processing payment of " << amount << "...\n";
-        cout << "Payment Successful!\n";
-        return true;
-    }
-};
-
-/* ================= COMMAND PATTERN ================= */
-class Command {
-public:
-    virtual void execute() = 0;
-};
-
-class Kiosk; // forward declaration
-
-class PurchaseCommand : public Command {
-private:
-    Kiosk *kiosk;
-    string productName;
-
-public:
-    PurchaseCommand(Kiosk *k, string name) {
-        kiosk = k;
-        productName = name;
-    }
-
-    void execute() override;
-};
-
-/* ================= KIOSK ================= */
-class Kiosk {
-private:
-    Inventory inventory;
-    PricingStrategy *pricingStrategy;
-    KioskState *state;
-    Payment payment;
-
-public:
-    Kiosk(PricingStrategy *ps, KioskState *st) {
-        pricingStrategy = ps;
-        state = st;
-    }
-
-    void addProduct(Product p) {
-        inventory.addProduct(p);
-    }
-
-    void showProducts() {
-        inventory.showProducts();
-    }
-
-    void setPricingStrategy(PricingStrategy *ps) {
-        pricingStrategy = ps;
-    }
-
-    void setState(KioskState *st) {
-        state = st;
-    }
-
-    void purchase(string productName) {
-        if (!state->allowPurchase()) {
-            cout << "Purchase not allowed!\n";
-            return;
-        }
-
-        Product *p = inventory.getProduct(productName);
-
-        if (p == nullptr || p->quantity == 0) {
-            cout << "Product not available!\n";
-            return;
-        }
-
-        double finalPrice = pricingStrategy->calculatePrice(p);
-
-        cout << "Final Price: " << finalPrice << endl;
-
-        if (payment.processPayment(finalPrice)) {
-            p->quantity--;
-            cout << "Item dispensed successfully!\n";
-        }
-    }
-};
-
-/* COMMAND EXECUTION */
-void PurchaseCommand::execute() {
-    kiosk->purchase(productName);
-}
-
-/* ================= MAIN (INTERACTIVE) ================= */
 int main() {
+  cout << "===== Aura Retail OS Started =====\n";
 
-    PricingStrategy *standard = new StandardPricing();
-    PricingStrategy *emergency = new EmergencyPricing();
+  CentralRegistry::getInstance()->showSystemInfo();
 
-    KioskState *active = new ActiveState();
-    KioskState *emergencyState = new EmergencyState();
+  Kiosk* kiosk = KioskFactory::createKiosk("Pharmacy");
 
-    Kiosk kiosk(standard, active);
+  /* LOAD INVENTORY */
+  kiosk->getInventory().setProducts(FileManager::load());
 
-    // Add products
-    kiosk.addProduct(Product("Water", 100, 5));
-    kiosk.addProduct(Product("Snacks", 50, 3));
+  if (kiosk->getInventory().getAllProducts().empty()) {
+    kiosk->addProduct(Product("Water", 100, 5));
+    kiosk->addProduct(Product("Snacks", 50, 3));
+    FileManager::save(kiosk->getInventory().getAllProducts());
+  }
 
-    int choice;
-    string productName;
+  /* 🔥 LOAD USER */
+  User user = UserManager::load();
 
-    while (true) {
-        cout << "\n===== KIOSK MENU =====\n";
-        cout << "1. Show Products\n";
-        cout << "2. Buy Product\n";
-        cout << "3. Set Active Mode\n";
-        cout << "4. Set Emergency Mode\n";
-        cout << "5. Use Standard Pricing\n";
-        cout << "6. Use Emergency Pricing\n";
-        cout << "0. Exit\n";
-        cout << "Enter choice: ";
-        cin >> choice;
+  /* LOAD CONFIG */
+  auto config = SystemConfig::load();
 
-        switch (choice) {
-            case 1:
-                kiosk.showProducts();
-                break;
+  KioskState* active = new ActiveState();
+  KioskState* emergency = new EmergencyState();
+  KioskState* maintenance = new MaintenanceState();
+  KioskState* power = new PowerSavingState();
 
-            case 2:
-                cout << "Enter product name: ";
-                cin >> productName;
-                {
-                    PurchaseCommand cmd(&kiosk, productName);
-                    cmd.execute();
-                }
-                break;
+  PricingStrategy* standard = new StandardPricing();
+  PricingStrategy* emergencyPricing = new EmergencyPricing();
 
-            case 3:
-                kiosk.setState(active);
-                cout << "Switched to ACTIVE mode\n";
-                break;
+  if (config.first == "Maintenance")
+    kiosk->setState(maintenance);
+  else if (config.first == "Emergency")
+    kiosk->setState(emergency);
+  else if (config.first == "Power")
+    kiosk->setState(power);
+  else
+    kiosk->setState(active);
 
-            case 4:
-                kiosk.setState(emergencyState);
-                cout << "Switched to EMERGENCY mode\n";
-                break;
+  if (config.second == "Emergency")
+    kiosk->setPricingStrategy(emergencyPricing);
+  else
+    kiosk->setPricingStrategy(standard);
 
-            case 5:
-                kiosk.setPricingStrategy(standard);
-                cout << "Using STANDARD pricing\n";
-                break;
+  /* OBSERVER */
+  EventManager em;
+  MonitoringSystem ms;
+  em.subscribe(&ms);
+  kiosk->setEventManager(&em);
 
-            case 6:
-                kiosk.setPricingStrategy(emergency);
-                cout << "Using EMERGENCY pricing\n";
-                break;
+  /* FAILURE */
+  RetryHandler r;
+  RecalibrationHandler rc;
+  AlertHandler a;
 
-            case 0:
-                cout << "Exiting...\n";
-                return 0;
+  r.setNext(&rc);
+  rc.setNext(&a);
 
-            default:
-                cout << "Invalid choice!\n";
+  int choice;
+
+  while (true) {
+    cout << "\n===== MENU =====\n";
+    cout << "1. Show Products\n";
+    cout << "2. Buy Product\n";
+    cout << "3. Add Product\n";
+    cout << "4. Active Mode\n";
+    cout << "5. Emergency Mode\n";
+    cout << "6. Maintenance Mode\n";
+    cout << "7. Power Saving Mode\n";
+    cout << "8. Standard Pricing\n";
+    cout << "9. Emergency Pricing\n";
+    cout << "10. Trigger Failure\n";
+    cout << "11. Show Transactions\n";
+    cout << "12. Show Balance\n";
+    cout << "13. Add Balance\n";
+    cout << "0. Exit\n";
+
+    cout << "Enter your choice : ";
+    cin >> choice;
+
+    switch (choice) {
+      case 1:
+        kiosk->showProducts();
+        break;
+
+      case 2: {
+        string name;
+        int qty;
+
+        cout << "Enter product: ";
+        cin >> name;
+
+        cout << "Enter quantity: ";
+        cin >> qty;
+
+        PurchaseCommand cmd(kiosk, name, user, qty);
+        cmd.execute();
+
+        user.showBalance();
+
+        FileManager::save(kiosk->getInventory().getAllProducts());
+        UserManager::save(user);
+
+        break;
+      }
+
+      case 3: {
+        string name;
+        double price;
+        int qty;
+
+        cout << "Name: ";
+        cin >> name;
+        cout << "Price: ";
+        cin >> price;
+        cout << "Quantity: ";
+        cin >> qty;
+
+        kiosk->addProduct(Product(name, price, qty));
+        FileManager::save(kiosk->getInventory().getAllProducts());
+        break;
+      }
+
+      case 4:
+        kiosk->setState(active);
+        kiosk->setPricingStrategy(standard);
+        SystemConfig::save("Active", "Standard");
+        cout<<"Active Mode Activated"<<endl;
+        break;
+
+      case 5:
+        kiosk->setState(emergency);
+        kiosk->setPricingStrategy(emergencyPricing);
+        SystemConfig::save("Emergency", "Emergency");
+        cout<<"Emergency Mode Activated"<<endl;
+        break;
+
+      case 6:
+        kiosk->setState(maintenance);
+        kiosk->setPricingStrategy(standard);
+        SystemConfig::save("Maintenance", "Standard");
+        cout<<"Maintenance Mode Activated"<<endl;
+        break;
+
+      case 7:
+        kiosk->setState(power);
+        kiosk->setPricingStrategy(standard);
+        SystemConfig::save("Power", "Standard");
+        cout<<"Power Saving Mode Activated"<<endl;
+        break;
+
+      case 8:
+        kiosk->setPricingStrategy(standard);
+        SystemConfig::save("Active", "Standard");
+        cout<<"Standard Pricing Activated"<<endl;
+        break;
+
+      case 9:
+        kiosk->setPricingStrategy(emergencyPricing);
+        SystemConfig::save("Active", "Emergency");
+        cout<<"Emergency Pricing Activated"<<endl;
+        break;
+
+      case 10:
+        r.handle();
+        break;
+
+      case 11:
+        TransactionManager::showHistory();
+        break;
+
+      case 12:
+        user.showBalance();
+        break;
+
+      case 13: {
+        double amount;
+        cout << "Enter amount to add: ";
+        cin >> amount;
+
+        if (amount <= 0) {
+          cout << "Invalid amount!\n";
+          break;
         }
+
+        user.addBalance(amount);
+
+        cout << "Balance added successfully!\n";
+
+        user.showBalance();
+
+        UserManager::save(user);  // 🔥 VERY IMPORTANT (persistence)
+
+        break;
+      }
+
+      case 0:
+        return 0;
     }
+  }
 }
