@@ -217,44 +217,59 @@ This ensures that data is retained across program restarts.
 
 ## 📸 Simulation Demonstration
 
-*(Insert screenshots in your report for each step below)*
-
 ---
 
-### 🔹 Step 1: Start Program  
-Display main menu  
+### 🔹 Step 1: Start Program   
 
 📸 Screenshot: 
 
-
-
----
-
-### 🔹 Step 2: Add Product  
-Add product details  
-
-📸 Screenshot: Product Added  
+<img width="875" height="747" alt="image" src="https://github.com/user-attachments/assets/4d9435a9-f45b-4394-95ef-4cce61b6d356" />
 
 ---
 
-### 🔹 Step 3: Add Balance  
-Update user balance  
+### 🔹 Step 2: Show Products    
 
-📸 Screenshot: Balance Updated  
+📸 Screenshot: 
 
----
-
-### 🔹 Step 4: View Products  
-Display inventory  
-
-📸 Screenshot: Product List  
+<img width="791" height="280" alt="image" src="https://github.com/user-attachments/assets/27832730-9f8b-4d07-b5ce-6c177c9e7de5" />
 
 ---
 
-### 🔹 Step 5: Purchase Product  
-Perform purchase with validations  
+### 🔹 Step 3: Buy Product(in normal mode)    
+
+📸 Screenshot:
+
+<img width="739" height="436" alt="image" src="https://github.com/user-attachments/assets/2e0d7b36-383a-4bed-9419-95da06670304" />
+
+---
+
+### 🔹 Step 4: Activate Emergency Mode  
+
+📸 Screenshot: 
+
+<img width="606" height="164" alt="image" src="https://github.com/user-attachments/assets/1432ea7b-ede0-4d68-95aa-91c95ce302ff" />
+
+---
+
+### 🔹 Purchase Product(in emergency mode for dynamic pricing)  
 
 📸 Screenshot:  
+
+<img width="656" height="420" alt="image" src="https://github.com/user-attachments/assets/6c327e7b-4789-4427-877b-06bb3524084b" />
+
+---
+
+## Author / Team
+
+* Developed as part of **IT620 – Object Oriented Programming Project**
+* Path A Implementated by team **PolymorphRangers**
+
+|Name         | StudentID|
+|- |- |
+|Dhrumil Doshi | 202512088 |
+|Harsh Rathod |202512086 |
+|Rohit Peswani | 202512115 |
+|Parshwa Jain | 202512096 |
 
 ---
 
