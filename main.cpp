@@ -10,7 +10,7 @@ using namespace std;
 #include "inventory/FileManager.h"
 #include "inventory/TransactionManager.h"
 #include "models/Product.h"
-#include "models/UserManager.h"  // 🔥 NEW
+#include "models/UserManager.h"  
 #include "observer/EventManager.h"
 #include "observer/MonitoringSystem.h"
 #include "pricing/EmergencyPricing.h"
@@ -213,7 +213,7 @@ int main() {
 
         user.showBalance();
 
-        UserManager::save(user);  // 🔥 VERY IMPORTANT (persistence)
+        UserManager::save(user); 
 
         break;
       }
