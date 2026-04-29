@@ -224,7 +224,9 @@ This ensures that data is retained across program restarts.
 ### 🔹 Step 1: Start Program  
 Display main menu  
 
-📸 Screenshot: Main Menu  
+📸 Screenshot: 
+
+
 
 ---
 
@@ -252,28 +254,7 @@ Display inventory
 ### 🔹 Step 5: Purchase Product  
 Perform purchase with validations  
 
-📸 Screenshot: Purchase Successful  
-
----
-
-### 🔹 Step 6: View Transactions  
-Display transaction history  
-
-📸 Screenshot: Transaction History  
-
----
-
-### 🔹 Step 7: Change State  
-Switch system mode  
-
-📸 Screenshot: State Change  
-
----
-
-### 🔹 Step 8: Restart System  
-Verify persistence  
-
-📸 Screenshot: Persistent Data  
+📸 Screenshot:  
 
 ---
 
