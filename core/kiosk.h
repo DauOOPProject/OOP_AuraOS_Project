@@ -34,7 +34,7 @@ public:
     
     void purchase(string productName, User& user, int qty);
 
-    /* 🔥 NEW (FOR PERSISTENCE) */
+    
     Inventory& getInventory();
 };
 
